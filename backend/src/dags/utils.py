@@ -1,7 +1,7 @@
 
 import os
 import pickle
-from dags import config
+from configs import configs
 import glob
 
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -61,8 +61,8 @@ def get_desired_range(df):
     """
     desired_range = list(df["text_set"].unique())
 
-    if (config.CURRENT_TEXT_RANGE != None):
-        desired_range = config.CURRENT_TEXT_RANGE
+    if (configs.CURRENT_TEXT_RANGE != None):
+        desired_range = configs.CURRENT_TEXT_RANGE
 
     return desired_range
 

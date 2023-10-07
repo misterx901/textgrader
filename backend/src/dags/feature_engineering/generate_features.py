@@ -15,19 +15,19 @@ logging.config.dictConfig({
 
 import pandas as pd
 from dags.predict.predict import *
-from dags import config
+from configs import configs
 
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOGLEVEL)
+logger.setLevel(configs.LOGLEVEL)
 
 def generate_topics_datasets(selected_container,text_range):
     logger.info("Starting to generate LSI features")
 
     lsi = LSI_feature_extractor(selected_container)
 
-    for topic_number in config.LSI_TOPIC_NUMBERS:
+    for topic_number in configs.LSI_TOPIC_NUMBERS:
         logger.info(f'generating LSI features for {topic_number} topics')
 
         for i in text_range:

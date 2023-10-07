@@ -1,7 +1,7 @@
 import pandas as pd
 import os 
 #from dags import utils 
-from dags import config
+from configs import configs
 from dags.utils import *
 
 from abc import ABC,abstractmethod
@@ -9,7 +9,7 @@ from abc import ABC,abstractmethod
 import logging 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOGLEVEL)
+logger.setLevel(configs.LOGLEVEL)
 
 
 class text_preprocessor(ABC):
@@ -69,14 +69,14 @@ class essay_preprocessor(text_preprocessor):
 
     def __init__(self):
         super().__init__()
-        self.input_folder = os.path.join(config.ESSAY_CONTAINER,'raw')
+        self.input_folder = os.path.join(configs.ESSAY_CONTAINER,'raw')
  
-        self.output_folder = os.path.join(config.ESSAY_CONTAINER,'raw')
+        self.output_folder = os.path.join(configs.ESSAY_CONTAINER,'raw')
 
-        self.train_directory = os.path.join(config.ESSAY_CONTAINER,'interim','train')
-        self.test_directory = os.path.join(config.ESSAY_CONTAINER,'interim','test')
+        self.train_directory = os.path.join(configs.ESSAY_CONTAINER,'interim','train')
+        self.test_directory = os.path.join(configs.ESSAY_CONTAINER,'interim','test')
 
-        self.text_range = config.ESSAY_TEXT_RANGE
+        self.text_range = configs.ESSAY_TEXT_RANGE
 
 
 
@@ -103,13 +103,13 @@ class answer_preprocessor(text_preprocessor):
 
     def __init__(self):
         super().__init__()
-        self.input_folder = os.path.join(config.SHORT_ANSWER_CONTAINER,'raw')
-        self.output_folder = os.path.join(config.SHORT_ANSWER_CONTAINER,'raw')
+        self.input_folder = os.path.join(configs.SHORT_ANSWER_CONTAINER,'raw')
+        self.output_folder = os.path.join(configs.SHORT_ANSWER_CONTAINER,'raw')
 
-        self.train_directory = os.path.join(config.SHORT_ANSWER_CONTAINER,'interim','train')
-        self.test_directory = os.path.join(config.SHORT_ANSWER_CONTAINER,'interim','test')
+        self.train_directory = os.path.join(configs.SHORT_ANSWER_CONTAINER,'interim','train')
+        self.test_directory = os.path.join(configs.SHORT_ANSWER_CONTAINER,'interim','test')
 
-        self.text_range = config.SHORT_ANSWER_TEXT_RANGE
+        self.text_range = configs.SHORT_ANSWER_TEXT_RANGE
 
      
     def get_enriched_texts(self):

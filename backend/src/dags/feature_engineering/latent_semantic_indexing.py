@@ -8,7 +8,7 @@ import pandas as pd
 import os
 from dags.utils import * 
 from abc import ABC,abstractmethod
-from dags import config
+from configs import configs
 
 import logging 
 
@@ -94,7 +94,7 @@ def generate_topics_datasets(selected_container,text_range):
 
     lsi = LSI_feature_extractor(selected_container)
 
-    for topic_number in config.LSI_TOPIC_NUMBERS:
+    for topic_number in configs.LSI_TOPIC_NUMBERS:
         logging.info(f'generating LSI features for {topic_number} topics')
 
         for i in text_range:

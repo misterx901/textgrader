@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.metrics import cohen_kappa_score
 import pandas as pd
 from dags.utils import *
+from configs import configs
 
 
 def predict_with_model(model,test_df,predicted_variable = "score"):
@@ -19,7 +20,7 @@ def predict_with_model(model,test_df,predicted_variable = "score"):
 
     return test_df , score
 
-def evaluate_lsi_predictions(topic_numbers = config.LSI_TOPIC_NUMBERS):
+def evaluate_lsi_predictions(topic_numbers = configs.LSI_TOPIC_NUMBERS):
 
     experiments_folder = os.path.join('essay','results')
 

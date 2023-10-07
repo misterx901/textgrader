@@ -10,7 +10,7 @@ from dags.feature_engineering.generate_features import *
 from dags.model_training.doc_to_vec_trainer import *
 from dags.experiments.experiments import *
 
-from dags import config 
+from configs import configs
 from dags import utils
 
 import pandas as pd
@@ -33,7 +33,7 @@ def run_dag(task):
 def task_correct_essays():
     ec = essay_corrector()
 
-    if config.BYPASS_CORRECTOR:
+    if configs.BYPASS_CORRECTOR:
         ec.bypass_correction()
     else:
         ec.correct_texts()
@@ -80,7 +80,7 @@ def task_train_doc_2_vec():
     train_doc_to_vec()
 
 def task_shared_tasks(selected_container,text_range):
-    if config.RETRAIN_DOC_TO_VEC:
+    if configs.RETRAIN_DOC_TO_VEC:
         task_train_doc_2_vec()
 
     task_generate_features(selected_container,text_range = text_range)
@@ -90,16 +90,16 @@ def task_shared_tasks(selected_container,text_range):
 
 
 def save_settings(text_mode):
-    settings = config.SETTINGS
+    settings = configs.SETTINGS
     especial_settings = settings[text_mode]
 
-    dict_to_json(especial_settings,config.SETTINGS_FILE)
+    dict_to_json(especial_settings,configs.SETTINGS_FILE)
 
     
 def task_pipeline_essays():
     task_correct_essays()
     task_generate_essay_datasets()
-    task_shared_tasks(selected_container = config.ESSAY_CONTAINER,text_range = config.ESSAY_TEXT_RANGE)
+    task_shared_tasks(selected_container = configs.ESSAY_CONTAINER,text_range = configs.ESSAY_TEXT_RANGE)
 
 
 def task_pipeline_short_answer():
@@ -109,7 +109,7 @@ def task_pipeline_short_answer():
     task_generate_short_answer_datasets()
     print("finished to generate short answers datasets")
 
-    task_shared_tasks(selected_container = config.SHORT_ANSWER_CONTAINER,text_range = config.SHORT_ANSWER_TEXT_RANGE)
+    task_shared_tasks(selected_container = configs.SHORT_ANSWER_CONTAINER,text_range = configs.SHORT_ANSWER_TEXT_RANGE)
     print("finished to generate short answers datasets")
 
 

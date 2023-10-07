@@ -2,7 +2,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from spellchecker import SpellChecker
 
 import re
-from dags import config
+from configs import configs
 import pandas as pd
 import os
 
@@ -11,7 +11,7 @@ from abc import ABC,abstractmethod
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOGLEVEL)
+logger.setLevel(configs.LOGLEVEL)
 
 import coloredlogs
 
@@ -24,7 +24,7 @@ class spell_corrector(ABC):
         self.new_column = "new_text"
 
     def replace(self,match):
-        return config.replacements[match.group(0)]
+        return configs.replacements[match.group(0)]
 
     def fix_common_mistakes_in_answer(self,answer):
         # Example:
@@ -37,7 +37,7 @@ class spell_corrector(ABC):
         ## 'the the cat has this thistle thats long cuz it is.'
         # is transformed to
         ## 'the cat has this thistle that's long because it is.'
-        answer = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in config.replacements),
+        answer = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in configs.replacements),
                 self.replace, answer)
 
         return answer
@@ -114,9 +114,9 @@ class essay_corrector(spell_corrector):
     def __init__(self):
         super().__init__()
 
-        self.input_directory = os.path.join(config.ESSAY_CONTAINER,'raw')
+        self.input_directory = os.path.join(configs.ESSAY_CONTAINER,'raw')
         self.input_file =  'essays.xlsx'
-        self.output_directory = os.path.join(config.ESSAY_CONTAINER,'raw')
+        self.output_directory = os.path.join(configs.ESSAY_CONTAINER,'raw')
 
         self.relevant_columns = ["essay_id","essay_set","essay","domain1_score","domain2_score"]
         self.old_column = "essay"
@@ -127,9 +127,9 @@ class short_answer_corrector(spell_corrector):
     def __init__(self):
         super().__init__()
 
-        self.input_directory = os.path.join(config.SHORT_ANSWER_CONTAINER,'raw')
+        self.input_directory = os.path.join(configs.SHORT_ANSWER_CONTAINER,'raw')
         self.input_file =  'short_answers.xlsx'
-        self.output_directory = os.path.join(config.SHORT_ANSWER_CONTAINER,'raw')
+        self.output_directory = os.path.join(configs.SHORT_ANSWER_CONTAINER,'raw')
 
         self.relevant_columns = ["Id","EssaySet","EssayText","Score1","Score2"]
         self.old_column = "EssayText"
