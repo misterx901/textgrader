@@ -2,26 +2,36 @@ version: "3.9"
 
 services:
   backend:
-    container_name: backend
+    container_name: textgrader_backend
     image: python:3.10
     working_dir: "/backend"
     command: sh -c "
       python -m venv venv && . venv/bin/activate && pip install -U pip &&
-      pip install -U "jax[cpu]" tensorflow-cpu tensorflow_text tensorflow_hub scikit-learn nltk gensim pyarrow &&
+      pip install -U "jax[cpu]" tensorflow-cpu tensorflow_text tensorflow_hub scikit-learn nltk gensim pyarrow psycopg2-binary &&
       pip install -U pandas fastapi "uvicorn[standard]" orjson openpyxl colorlog pyspellchecker coloredlogs &&
       cd src && python requirements.py && python run.py task general_tasks task_correct_essays &&
       python run.py task general_tasks task_pipeline_essays && uvicorn api:app --host 0.0.0.0 --reload"
     ports:
-      - 8000:8000
+      - 3006:8000
     volumes:
       - ./backend:/backend
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=myuser
+      - DATABASE_PASSWORD=mypassword
+    restart: always
 
   frontend:
-    container_name: frontend
+    container_name: textgrader_frontend
     image: node:lts-alpine
     working_dir: "/frontend"
-    command: sh -c "yarn && yarn dev"
+    command: sh -c "yarn && yarn prod"
     ports:
-      - 3000:3000
+      - 3005:3000
     volumes:
       - ./frontend:/frontend
+    restart: always
+volumes:
+  postgres-data:
+
+
