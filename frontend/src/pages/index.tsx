@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-
-const Home = () => {
-
+const Index = () => {
 
     return (
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", height: "70vh", padding: "20px 50px", textAlign: "center", gap: "10px" }}>
@@ -13,4 +10,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Index;
