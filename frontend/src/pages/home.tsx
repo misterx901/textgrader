@@ -1,34 +1,16 @@
-import { Tabs } from 'antd';
+import { Tabs, Button } from 'antd';
 import { useState, useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useAuth } from '../context';
 import CustomTable from '../components/customTable';
 
 const { TabPane } = Tabs;
 
-interface Tema {
-    id_tema: string;
-    nome_professor: string;
-    tema: string;
-    descricao: string;
-}
-
-interface Redacao {
-    id_redacao: number;
-    titulo_redacao: string,
-    nota1: number,
-    nota2: number,
-    nota3: number,
-    nota4: number,
-    nota5: number
-}
-
 const Home = () => {
     const [activeKey, setActiveKey] = useState<string>('1');
-    const [temasData, setTemasData] = useState<Tema[]>([]);
-    const [redacoesData, setRedacoesData] = useState<Redacao[]>([]);
-
+    const [temasData, setTemasData] = useState([]);
+    const [redacoesData, setRedacoesData] = useState([]);
     const { isLoggedIn, tipoUsuario } = useAuth(); 
 
     const handleTabChange = (key: string) => {
@@ -63,6 +45,10 @@ const Home = () => {
         fetchRedacoes();
     }, []);
 
+    const deleteTema = () => {
+        console.log('tema deletado')
+    }
+
     const temasColumns = [
         { title: 'Professor', dataIndex: 'nome_professor', key: 'nome_professor' },
         { title: 'Tema', dataIndex: 'tema', key: 'tema' },
@@ -71,10 +57,15 @@ const Home = () => {
             title: 'Ações',
             key: 'acoes',
             render: () => (
-                <Link href={`/redacao`}>
-                    <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                    Inserir Nova Redação
-                </Link>
+                tipoUsuario === 'professor' ? (
+                    <Button type="link" onClick={deleteTema} danger icon={<DeleteOutlined />} />
+                ) : 
+                (
+                    <Link href={`/redacao`}>
+                        <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                        Inserir Nova Redação
+                    </Link>
+                )
             ),
         },
     ];
@@ -90,32 +81,42 @@ const Home = () => {
 
     return (
         <div style={{ padding: '0 20px', width: '100vw' }}>
-            <Tabs activeKey={activeKey} onChange={handleTabChange} style={{ height: '100%' }}>
-                <TabPane tab="Home" key="1">
-                    Content of Tab Pane 1
-                </TabPane>
-                <TabPane tab="Temas" key="2">
-                    {isLoggedIn && tipoUsuario === 'aluno' &&
-                        <CustomTable
-                            dataSource={temasData}
-                            columns={temasColumns}
-                        />
-                    }
-                </TabPane>
-                <TabPane tab="Redações" key="3">
-                    {isLoggedIn && tipoUsuario === 'aluno' &&
-                        <CustomTable
-                            dataSource={redacoesData}
-                            columns={redacaoColumns}
-                        />
-                    }
-                </TabPane>
-            </Tabs>
+                <Tabs activeKey={activeKey} onChange={handleTabChange} style={{ flex: 1 }}>
+                    <TabPane tab="Home" key="1">
+                        Content of Tab Pane 1
+                    </TabPane>
+                    <TabPane tab="Temas" key="2">
+                        {tipoUsuario === 'professor' && (
+                        <div style={{ margin: '20px 0px 20px 0px' }}>
+                            <Link href="/tema">
+                                <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                                Adicionar Tema
+                            </Link>
+                        </div>
+                        )}
+                        {isLoggedIn &&
+                            <CustomTable
+                                dataSource={temasData}
+                                columns={temasColumns}
+                            />
+                        }
+                    </TabPane>
+                    <TabPane tab="Redações" key="3">
+                        {isLoggedIn && tipoUsuario === 'aluno' &&
+                            <CustomTable
+                                dataSource={redacoesData}
+                                columns={redacaoColumns}
+                            />
+                        }
+                    </TabPane>
+                </Tabs>
         </div>
     );
 };
 
 export default Home;
+
+
 
 
 
