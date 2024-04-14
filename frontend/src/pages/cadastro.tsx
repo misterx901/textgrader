@@ -79,7 +79,7 @@ const Cadastro = () => {
                 <div style={{ marginBottom: '20px' }}>
                     <Input
                         placeholder="Nome de usuário"
-                        value={email}
+                        value={nomeUsuario}
                         onChange={e => setNomeUsuario(e.target.value)}
                         disabled={isDisabled}
                     />

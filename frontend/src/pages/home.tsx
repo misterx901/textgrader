@@ -72,20 +72,18 @@ const Home = () => {
 
     const redacaoColumns = [
         { title: 'Título', dataIndex: 'titulo_redacao', key: 'titulo_redacao' },
-        { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1' },
-        { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2' },
-        { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3' },
-        { title: 'Nota 4', dataIndex: 'nota4', key: 'nota4' },
-        { title: 'Nota 5', dataIndex: 'nota5', key: 'nota5' },
+        { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1', align: 'center' },
+        { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2', align: 'center' },
+        { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3', align: 'center' },
+        { title: 'Nota 4', dataIndex: 'nota4', key: 'nota4', align: 'center' },
+        { title: 'Nota 5', dataIndex: 'nota5', key: 'nota5', align: 'center' },
+        { title: 'Nota Professor', dataIndex: 'nota_professor', key: 'nota_professor', align: 'center' },
     ];
 
     return (
         <div style={{ padding: '0 20px', width: '100vw' }}>
                 <Tabs activeKey={activeKey} onChange={handleTabChange} style={{ flex: 1 }}>
-                    <TabPane tab="Home" key="1">
-                        Content of Tab Pane 1
-                    </TabPane>
-                    <TabPane tab="Temas" key="2">
+                    <TabPane tab="Temas" key="1">
                         {tipoUsuario === 'professor' && (
                         <div style={{ margin: '20px 0px 20px 0px' }}>
                             <Link href="/tema">
@@ -101,8 +99,8 @@ const Home = () => {
                             />
                         }
                     </TabPane>
-                    <TabPane tab="Redações" key="3">
-                        {isLoggedIn && tipoUsuario === 'aluno' &&
+                    <TabPane tab="Redações" key="2">
+                        {isLoggedIn &&
                             <CustomTable
                                 dataSource={redacoesData}
                                 columns={redacaoColumns}
