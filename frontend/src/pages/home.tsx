@@ -1,20 +1,35 @@
-import { Tabs, Button } from 'antd';
+import { Tabs, Button, Modal, Tooltip } from 'antd';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useAuth } from '../context';
 import CustomTable from '../components/customTable';
+import ModalDetalhesTema from '@/components/modalDetalhesTema';
 
 const { TabPane } = Tabs;
 
+export interface Tema {
+    id_tema: string;
+    nome_professor: string;
+    tema: string;
+    descricao: string;
+}
+
 const Home = () => {
     const [activeKey, setActiveKey] = useState<string>('1');
-    const [temasData, setTemasData] = useState([]);
+    const [temasData, setTemasData] = useState<Tema[]>([]); 
     const [redacoesData, setRedacoesData] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedTema, setSelectedTema] = useState<Tema | null>(null);
     const { isLoggedIn, tipoUsuario } = useAuth(); 
 
     const handleTabChange = (key: string) => {
         setActiveKey(key);
+    };
+
+    const openModal = (tema: any) => {
+        setSelectedTema(tema);
+        setModalVisible(true);
     };
 
     useEffect(() => {
@@ -50,9 +65,17 @@ const Home = () => {
     }
 
     const temasColumns = [
-        { title: 'Professor', dataIndex: 'nome_professor', key: 'nome_professor' },
-        { title: 'Tema', dataIndex: 'tema', key: 'tema' },
-        { title: 'Descrição', dataIndex: 'descricao', key: 'descricao' },
+        { title: 'Professor', dataIndex: 'nome_professor', key: 'nome_professor', ellipsis: true },
+        { 
+            title: 'Tema', 
+            dataIndex: 'tema', 
+            key: 'tema', 
+            render: (text: string, record: Tema) => 
+                <Tooltip title="Ver detalhes do tema">
+                    <Button type="link" onClick={() => openModal(record)}>{text}</Button>
+                </Tooltip>, ellipsis: true 
+        },
+        { title: 'Descrição', dataIndex: 'descricao', key: 'descricao', ellipsis: true },
         {
             title: 'Ações',
             key: 'acoes',
@@ -71,17 +94,17 @@ const Home = () => {
     ];
 
     const redacaoColumns = [
-        { title: 'Título', dataIndex: 'titulo_redacao', key: 'titulo_redacao' },
-        { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1', align: 'center' },
-        { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2', align: 'center' },
-        { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3', align: 'center' },
-        { title: 'Nota 4', dataIndex: 'nota4', key: 'nota4', align: 'center' },
-        { title: 'Nota 5', dataIndex: 'nota5', key: 'nota5', align: 'center' },
-        { title: 'Nota Professor', dataIndex: 'nota_professor', key: 'nota_professor', align: 'center' },
+        { title: 'Título', dataIndex: 'titulo_redacao', key: 'titulo_redacao', ellipsis: true },
+        { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1', align: 'center', ellipsis: true },
+        { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2', align: 'center', ellipsis: true },
+        { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3', align: 'center', ellipsis: true },
+        { title: 'Nota 4', dataIndex: 'nota4', key: 'nota4', align: 'center', ellipsis: true },
+        { title: 'Nota 5', dataIndex: 'nota5', key: 'nota5', align: 'center', ellipsis: true },
+        { title: 'Nota Professor', dataIndex: 'nota_professor', key: 'nota_professor', align: 'center', ellipsis: true },
     ];
 
     return (
-        <div style={{ padding: '0 20px', width: '100vw' }}>
+        <div style={{ padding: '0 20px 0 20px', width: '100vw' }}>
                 <Tabs activeKey={activeKey} onChange={handleTabChange} style={{ flex: 1 }}>
                     <TabPane tab="Temas" key="1">
                         {tipoUsuario === 'professor' && (
@@ -108,6 +131,12 @@ const Home = () => {
                         }
                     </TabPane>
                 </Tabs>
+
+                <ModalDetalhesTema // Renderizando o componente do modal
+                    open={modalVisible}
+                    onCancel={() => setModalVisible(false)}
+                    tema={selectedTema}
+                />
         </div>
     );
 };

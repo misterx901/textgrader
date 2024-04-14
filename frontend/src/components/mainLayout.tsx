@@ -39,7 +39,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         </Link>
                     </Menu.Item>
                     {isLoggedIn === false ? (
-                        <Tooltip title="Você precisa fazer login para acessar essa funcionalidade">
+                        <Tooltip title="Você precisa fazer login para acessar essa página">
                             <div onClick={(e) => e.preventDefault()}>
                                 <Menu.Item disabled>
                                     Home
@@ -80,7 +80,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 <a href="https://github.com/Gustavo-Pettine" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Pettine</a> 
                 and Improved by
                 <a href="https://github.com/misterx901" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Felipe,</a>
-                <a href="https://github.com/juliemoura" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucas,</a>
+                <a href="https://github.com/LucassAbm" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucas,</a>
                 <a href="https://github.com/Gustavo-Pettine" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucca,</a> 
                 <a href="https://github.com/VitorBelloni" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Vitor</a>
             </Footer>
