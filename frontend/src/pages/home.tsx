@@ -123,12 +123,12 @@ const Home = () => {
             title: 'Ações',
             key: 'acoes',
             render: (record: Tema) => (
-                tipoUsuario === 'professor' ? (
+                tipoUsuario === 'professor' && record.nome_professor === nomeUsuario ? (
                     <Tooltip title="Deletar tema">
                         <Button type="link" onClick={() => handleDeleteTema(record.id)} danger icon={<DeleteOutlined />} />
                     </Tooltip>
                 ) : 
-                (
+                tipoUsuario === 'aluno' && (
                     <Link href={`/redacao`}>
                         <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
                         Inserir Nova Redação

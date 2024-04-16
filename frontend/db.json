@@ -136,6 +136,12 @@
       "nome_professor": "Professor Girafales",
       "tema": "tema enem ",
       "descricao": "teste"
+    },
+    {
+      "id": "cf8c",
+      "nome_professor": "Professor Girafales",
+      "tema": "novo tema girafales",
+      "descricao": "teste cadastro de tema 2"
     }
   ],
   "redacoes": [
@@ -169,7 +175,6 @@
       "nota5": 740,
       "nota_professor": 800,
       "id": "b932"
-
     },
     {
       "titulo_redacao": "titulo3",
