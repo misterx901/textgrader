@@ -1,4 +1,4 @@
-import { Tabs, Button, Modal, Tooltip } from 'antd';
+import { Tabs, Button, Modal, Tooltip, message, Select, Space } from 'antd';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -7,9 +7,10 @@ import CustomTable from '../components/customTable';
 import ModalDetalhesTema from '@/components/modalDetalhesTema';
 
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 export interface Tema {
-    id_tema: string;
+    id: string;
     nome_professor: string;
     tema: string;
     descricao: string;
@@ -21,7 +22,8 @@ const Home = () => {
     const [redacoesData, setRedacoesData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedTema, setSelectedTema] = useState<Tema | null>(null);
-    const { isLoggedIn, tipoUsuario } = useAuth(); 
+    const [filter, setFilter] = useState<string>('todos');
+    const { isLoggedIn, tipoUsuario, nomeUsuario } = useAuth(); 
 
     const handleTabChange = (key: string) => {
         setActiveKey(key);
@@ -60,9 +62,29 @@ const Home = () => {
         fetchRedacoes();
     }, []);
 
-    const deleteTema = () => {
-        console.log('tema deletado')
-    }
+    const handleDeleteTema = async (id: string) => {
+        try {
+            const response = await fetch(`http://localhost:5000/temas/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                setTemasData(temasData.filter(tema => tema.id !== id));
+                message.success('Tema deletado com sucesso!');
+            } 
+        } catch (error) {
+            console.error('Erro ao deletar o tema:', error);
+            message.error('Erro ao deletar o tema. Por favor, tente novamente.');
+        }
+    };
+
+    const handleTemaEditado = (temaEditado: Tema) => {
+        setTemasData(temasData.map(tema => (tema.id === temaEditado.id ? temaEditado : tema)));
+    };
+
+    const handleFilterTemas = () => {
+        return temasData.filter(tema => tema.nome_professor === nomeUsuario);
+    };
 
     const temasColumns = [
         { title: 'Professor', dataIndex: 'nome_professor', key: 'nome_professor', ellipsis: true },
@@ -71,7 +93,7 @@ const Home = () => {
             dataIndex: 'tema', 
             key: 'tema', 
             render: (text: string, record: Tema) => 
-                <Tooltip title="Ver detalhes do tema">
+                <Tooltip title={tipoUsuario === 'aluno' ? "Detalhes do tema" : "Editar tema"}>
                     <Button type="link" onClick={() => openModal(record)}>{text}</Button>
                 </Tooltip>, ellipsis: true 
         },
@@ -79,9 +101,11 @@ const Home = () => {
         {
             title: 'Ações',
             key: 'acoes',
-            render: () => (
+            render: (record: Tema) => (
                 tipoUsuario === 'professor' ? (
-                    <Button type="link" onClick={deleteTema} danger icon={<DeleteOutlined />} />
+                    <Tooltip title="Deletar tema">
+                        <Button type="link" onClick={() => handleDeleteTema(record.id)} danger icon={<DeleteOutlined />} />
+                    </Tooltip>
                 ) : 
                 (
                     <Link href={`/redacao`}>
@@ -107,17 +131,24 @@ const Home = () => {
         <div style={{ padding: '0 20px 0 20px', width: '100vw' }}>
                 <Tabs activeKey={activeKey} onChange={handleTabChange} style={{ flex: 1 }}>
                     <TabPane tab="Temas" key="1">
-                        {tipoUsuario === 'professor' && (
-                        <div style={{ margin: '20px 0px 20px 0px' }}>
-                            <Link href="/tema">
-                                <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                                Adicionar Tema
-                            </Link>
-                        </div>
-                        )}
+                        <Space style={{ marginBottom: 16 }}>
+                            {tipoUsuario === 'professor' && (
+                                <Link href="/tema">
+                                    <Button type="primary" icon={<PlusOutlined />} style={{ marginRight: 8 }}>
+                                        Adicionar Tema
+                                    </Button>
+                                </Link>
+                            )}
+                            {tipoUsuario === 'professor' && (
+                                <Select defaultValue="todos" style={{ width: 140 }} onChange={value => setFilter(value)}>
+                                    <Option value="todos">Todos os Temas</Option>
+                                    <Option value="meus">Meus Temas</Option>
+                                </Select>
+                            )}
+                        </Space>
                         {isLoggedIn &&
                             <CustomTable
-                                dataSource={temasData}
+                                dataSource={filter === 'meus' ? handleFilterTemas() : temasData}
                                 columns={temasColumns}
                             />
                         }
@@ -132,21 +163,15 @@ const Home = () => {
                     </TabPane>
                 </Tabs>
 
-                <ModalDetalhesTema // Renderizando o componente do modal
+                <ModalDetalhesTema 
                     open={modalVisible}
                     onCancel={() => setModalVisible(false)}
                     tema={selectedTema}
+                    onTemaEditado={handleTemaEditado}
                 />
         </div>
     );
 };
 
 export default Home;
-
-
-
-
-
-
-
 
