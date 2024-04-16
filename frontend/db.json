@@ -41,8 +41,8 @@
     },
     {
       "id": "761a",
-      "email": "teste_prof",
-      "password": "teste",
+      "email": "girafales@gmail.com",
+      "password": "girafales",
       "nomeUsuario": "Professor Girafales",
       "tipoUsuario": "professor"
     }
@@ -140,17 +140,16 @@
   ],
   "redacoes": [
     {
-      "id_redacao": 1,
       "titulo_redacao": "titulo1",
       "nota1": 890,
       "nota2": 720,
       "nota3": 680,
       "nota4": 800,
       "nota5": 760,
-      "id": "ede5"
+      "id": "ede5",
+      "id_tema": "3c5c"
     },
     {
-      "id_redacao": 2,
       "titulo_redacao": "titulo2",
       "nota1": 920,
       "nota2": 1000,
@@ -158,10 +157,10 @@
       "nota4": 880,
       "nota5": 940,
       "nota_professor": 760,
-      "id": "27f0"
+      "id": "27f0",
+      "id_tema": "3c5c"
     },
     {
-      "id_redacao": 3,
       "titulo_redacao": "titulo3",
       "nota1": 580,
       "nota2": 620,
@@ -170,9 +169,9 @@
       "nota5": 740,
       "nota_professor": 800,
       "id": "b932"
+
     },
     {
-      "id_redacao": 3,
       "titulo_redacao": "titulo3",
       "nota1": 580,
       "nota2": 620,

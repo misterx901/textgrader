@@ -16,10 +16,22 @@ export interface Tema {
     descricao: string;
 }
 
+export interface Redacao {
+    titulo_redacao: string;
+    nota1: number;
+    nota2: number;
+    nota3: number;
+    nota4: number;
+    nota5: number;
+    nota_professor: number;
+    id_tema: string;
+    id: string;
+}
+
 const Home = () => {
     const [activeKey, setActiveKey] = useState<string>('1');
     const [temasData, setTemasData] = useState<Tema[]>([]); 
-    const [redacoesData, setRedacoesData] = useState([]);
+    const [redacoesData, setRedacoesData] = useState<Redacao[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedTema, setSelectedTema] = useState<Tema | null>(null);
     const [filter, setFilter] = useState<string>('todos');
@@ -84,6 +96,15 @@ const Home = () => {
 
     const handleFilterTemas = () => {
         return temasData.filter(tema => tema.nome_professor === nomeUsuario);
+    };
+
+    const handleFilterRedacoes = () => {
+        if (filter === 'meus') {
+            return redacoesData.filter(redacao => {
+                return temasData.find(tema => tema.id === redacao.id_tema && tema.nome_professor === nomeUsuario);
+            });
+        }
+        return redacoesData;
     };
 
     const temasColumns = [
@@ -154,9 +175,17 @@ const Home = () => {
                         }
                     </TabPane>
                     <TabPane tab="Redações" key="2">
+                        <Space style={{ marginBottom: 16 }}>
+                            {tipoUsuario === 'professor' && (
+                                <Select defaultValue="todos" style={{ width: 200 }} onChange={value => setFilter(value)}>
+                                    <Option value="todos">Todas as Redações</Option>
+                                    <Option value="meus">Redações dos meus temas</Option>
+                                </Select>
+                            )}
+                        </Space>
                         {isLoggedIn &&
                             <CustomTable
-                                dataSource={redacoesData}
+                                dataSource={handleFilterRedacoes()}
                                 columns={redacaoColumns}
                             />
                         }
