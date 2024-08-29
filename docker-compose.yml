@@ -4,6 +4,9 @@ services:
   flask-app:
     image: python:3.10
     command: bash -c "cd app/ && pip install -r requirements.txt && python app.py"
+    environment:
+      - SUBSCRIPTION_KEY="sua chave sem aspas aqui"
+      - ENDPOINT="seu endpoint sem aspas aqui"
     volumes:
       - ./backend_v2:/app
     ports:

@@ -2,7 +2,7 @@ import { S } from '@/styles/Home.styles'
 import Image from 'next/image'
 import BookPagesImg from '../../public/bookPages.jpg'
 
-const Home = () => {
+const Index = () => {
   return (
     <S.ContentWrapper>
       <S.ImageContainer className='ImageContainer'>
@@ -27,4 +27,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Index;

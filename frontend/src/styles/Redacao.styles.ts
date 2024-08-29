@@ -28,9 +28,21 @@ const ButtonWrapper = styled.div`
   gap: 3rem;
 `
 
+export const UploadWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  input[type="file"] {
+    margin-right: 10px;
+  }
+`
+
 export const S = {
   ButtonWrapper,
   Wrapper,
   Title,
-  MyButton
+  MyButton,
+  UploadWrapper
 }
