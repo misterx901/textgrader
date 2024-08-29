@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from functions import use_vectorizer, evaluate_redacao, persist_essay
+from functions import use_vectorizer, evaluate_redacao, persist_essay, get_text
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -21,6 +21,18 @@ def segundo_endpoint():
     persist_essay(essay, obj)
     return response
   
+@app.post("/model2")
+def terceiro_endpoint():
+    
+    image = request.files['image']
+    essay = get_text(image)
+    print(essay)
+    obj = evaluate_redacao(essay)
+    response = jsonify({"grades": obj})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    persist_essay(essay, obj)
+    return response
 
 if __name__ == "__main__":
   from support import use_vectorizer

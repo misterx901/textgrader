@@ -1,17 +1,24 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Modal, Skeleton } from 'antd'
-import { ClearOutlined, CheckOutlined } from '@ant-design/icons'
-import TextArea from 'antd/lib/input/TextArea'
+import { ClearOutlined, CheckOutlined, UploadOutlined } from '@ant-design/icons'
+import  TextArea from 'antd/lib/input/TextArea'
 import { S } from '@/styles/Redacao.styles'
 
 const Redacao = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [essay, setEssay] = useState('')
     const [essayGrade, setEssayGrade] = useState<object>({ key: 'value' })
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    
 
-  const showModal = async () => {
+  const showModalText = async () => {
     await getEssayGrade()
+    setIsModalOpen(true)
+  }
+
+  const showModalImage = async () => {
+    await uploadImage()
     setIsModalOpen(true)
   }
 
@@ -42,6 +49,40 @@ const Redacao = () => {
     setEssay('')
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0])
+    }
+  }
+
+  const uploadImage = async () => {
+    if (!selectedFile) {
+      console.error('No file selected')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('image', selectedFile)
+
+    try {
+      const response = await axios.post('http://localhost:3006/model2', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+
+      const data = response.data
+      console.log(data.grades)
+
+      setEssayGrade(data.grades)
+
+    
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <S.Wrapper>
       <S.Title>🧾 Redação 🧾</S.Title>
@@ -57,10 +98,17 @@ const Redacao = () => {
           Apagar texto
         </S.MyButton>
 
-        <S.MyButton onClick={showModal} size='large' type='primary' icon={<CheckOutlined />}>
+        <S.MyButton onClick={showModalText} size='large' type='primary' icon={<CheckOutlined />}>
           Obter nota
         </S.MyButton>
       </S.ButtonWrapper>
+
+      <S.UploadWrapper>
+        <input type="file" onChange={handleFileChange} />
+        <S.MyButton onClick={showModalImage} size='large' type='primary' icon={<UploadOutlined />}>
+          Upload Imagem
+        </S.MyButton>
+      </S.UploadWrapper>
 
       <Modal title='Nota da redação' open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
         {essayGrade ? (
