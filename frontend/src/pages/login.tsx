@@ -16,19 +16,15 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/users');
-
-            const user = response.data.find((user: { email: string; password: string; }) => user.email === email && user.password === password);
-
-            console.log(user);
-
-            if (user) {
-                setAuthData({isLoggedIn: true, tipoUsuario: user.tipoUsuario, nomeUsuario: user.nomeUsuario}); 
-                console.log('Login bem-sucedido!');
-                router.push('/home')
-            } else {
-                setErrorMessage('Email ou senha incorretos')
-            }
+            const response = await axios.post('http://localhost:3006/userLogin', {
+                email,
+                password,
+            });
+            const data = response.data;
+            console.log('Login bem-sucedido!', data);
+            setAuthData({isLoggedIn: true, tipoUsuario: data.tipoUsuario, nomeUsuario: data.nomeUsuario});
+            console.log('data', data);
+            router.push('/home');
         } catch (error) {
             console.error('Erro ao fazer login:', error);
         }
