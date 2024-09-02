@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useRouter } from 'next/router';
 import { useState } from 'react'
 import { Modal, Skeleton } from 'antd'
 import { ClearOutlined, CheckOutlined, UploadOutlined } from '@ant-design/icons'
@@ -10,7 +11,8 @@ const Redacao = () => {
     const [essay, setEssay] = useState('')
     const [essayGrade, setEssayGrade] = useState<object>({ key: 'value' })
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
-    
+    const router = useRouter();
+    const { id } = router.query;
 
   const showModalText = async () => {
     await getEssayGrade()
@@ -37,11 +39,12 @@ const Redacao = () => {
   const getEssayGrade = async () => {
     const response = await axios.post('http://localhost:3006/model', {
       essay: essay,
+      id:id
     })
 
     const data = response.data
     console.log(data.grades)
-
+   
     setEssayGrade(data.grades)
   }
 
@@ -63,6 +66,7 @@ const Redacao = () => {
 
     const formData = new FormData()
     formData.append('image', selectedFile)
+    formData.append('id', id ? id.toString() : '')
 
     try {
       const response = await axios.post('http://localhost:3006/model2', formData, {

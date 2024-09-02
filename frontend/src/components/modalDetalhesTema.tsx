@@ -18,7 +18,7 @@ const ModalDetalhesTema: React.FC<TemaDetalhes> = ({ open, onCancel, tema, onTem
     const handleEditarTema = async () => {
         try {
             if (tema && (descricaoEditada !== '' || temaEditado !== '')) {
-                const response = await fetch(`http://localhost:5000/temas/${tema.id}`, {
+                const response = await fetch(`http://localhost:3006/temas/${tema._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

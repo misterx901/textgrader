@@ -84,7 +84,6 @@ def get_text(imagem):
         for text_result in get_handw_results.analyze_result.read_results:
             for line in text_result.lines:
                 text += line.text + " "
-        print(text.strip())
         return text.strip()
     else:
         return "Erro"

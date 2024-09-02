@@ -10,14 +10,14 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 export interface Tema {
-    id: string;
+    _id: string;
     nome_professor: string;
     tema: string;
     descricao: string;
 }
 
 export interface Redacao {
-    titulo_redacao: string;
+    titulo: string;
     nota1: number;
     nota2: number;
     nota3: number;
@@ -49,7 +49,7 @@ const Home = () => {
     useEffect(() => {
         const fetchTemas = async () => {
             try {
-                const response = await fetch('http://localhost:5000/temas');
+                const response = await fetch('http://localhost:3006/temas');
                 const data = await response.json();
                 setTemasData(data);
             } catch (error) {
@@ -63,7 +63,7 @@ const Home = () => {
     useEffect(() => {
         const fetchRedacoes = async () => {
             try {
-                const response = await fetch('http://localhost:5000/redacoes');
+                const response = await fetch('http://localhost:3006/redacoes');
                 const data = await response.json();
                 setRedacoesData(data);
             } catch (error) {
@@ -76,12 +76,12 @@ const Home = () => {
 
     const handleDeleteTema = async (id: string) => {
         try {
-            const response = await fetch(`http://localhost:5000/temas/${id}`, {
+            const response = await fetch(`http://localhost:3006/temas/${id}`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
-                setTemasData(temasData.filter(tema => tema.id !== id));
+                setTemasData(temasData.filter(tema => tema._id !== id));
                 message.success('Tema deletado com sucesso!');
             } 
         } catch (error) {
@@ -91,7 +91,7 @@ const Home = () => {
     };
 
     const handleTemaEditado = (temaEditado: Tema) => {
-        setTemasData(temasData.map(tema => (tema.id === temaEditado.id ? temaEditado : tema)));
+        setTemasData(temasData.map(tema => (tema._id === temaEditado._id ? temaEditado : tema)));
     };
 
     const handleFilterTemas = () => {
@@ -101,7 +101,7 @@ const Home = () => {
     const handleFilterRedacoes = () => {
         if (filter === 'meus') {
             return redacoesData.filter(redacao => {
-                return temasData.find(tema => tema.id === redacao.id_tema && tema.nome_professor === nomeUsuario);
+                return temasData.find(tema => tema._id === redacao.id_tema && tema.nome_professor === nomeUsuario);
             });
         }
         return redacoesData;
@@ -125,13 +125,13 @@ const Home = () => {
             render: (record: Tema) => (
                 tipoUsuario === 'professor' && record.nome_professor === nomeUsuario ? (
                     <Tooltip title="Deletar tema">
-                        <Button type="link" onClick={() => handleDeleteTema(record.id)} danger icon={<DeleteOutlined />} />
+                        <Button type="link" onClick={() => handleDeleteTema(record._id)} danger icon={<DeleteOutlined />} />
                     </Tooltip>
                 ) : 
                 tipoUsuario === 'aluno' && (
-                    <Link href={`/redacao`}>
-                        <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                        Inserir Nova Redação
+                    <Link href={`/redacao?id=${record._id}`}>
+                      <PlusOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                      Inserir Nova Redação
                     </Link>
                 )
             ),
@@ -139,7 +139,7 @@ const Home = () => {
     ];
 
     const redacaoColumns = [
-        { title: 'Título', dataIndex: 'titulo_redacao', key: 'titulo_redacao', ellipsis: true },
+        { title: 'Título', dataIndex: 'titulo', key: 'titulo', ellipsis: true },
         { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1', align: 'center', ellipsis: true },
         { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2', align: 'center', ellipsis: true },
         { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3', align: 'center', ellipsis: true },

@@ -28,7 +28,7 @@ const Cadastro = () => {
 
     const handleCadastro = async () => {
         try {
-            await axios.post('http://localhost:5000/users', {
+            await axios.post('http://localhost:3006/userRegister', {
                 email,
                 password,
                 nomeUsuario,

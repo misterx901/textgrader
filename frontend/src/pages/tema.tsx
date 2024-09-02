@@ -10,7 +10,7 @@ const Tema = () => {
 
     const handleCadastroTema = async (values: any) => {
         try {
-            const response = await fetch('http://localhost:5000/temas', {
+            const response = await fetch('http://localhost:3006/temas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
