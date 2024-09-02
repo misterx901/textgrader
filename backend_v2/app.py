@@ -24,6 +24,7 @@ def primeiro_endpoint_get():
 def segundo_endpoint():
     essay = request.json['essay']
     id_tema = request.json['id']
+    aluno = request.json['aluno']
     
     lines = essay.split('\n')
     title = lines[0] if lines else "Título não fornecido"
@@ -49,7 +50,8 @@ def segundo_endpoint():
         "nota4": grades['nota4'],
         "nota5": grades['nota5'],
         "notaprofessor": "",
-        "id_tema":  id_tema
+        "id_tema":  id_tema,
+        "aluno": aluno
     }
     
     redacoes_collection = db.redacoes
@@ -64,7 +66,11 @@ def segundo_endpoint():
 @app.post("/model2")
 def terceiro_endpoint():
     image = request.files['image']
+    print('imagem', image)
     id_tema = request.form.get('id')
+    aluno = request.form.get('aluno')
+
+    print('aluno', aluno)
     
     essay = get_text(image)
 
@@ -87,7 +93,8 @@ def terceiro_endpoint():
         "nota4": grades['nota4'],
         "nota5": grades['nota5'],
         "notaprofessor": "",
-        "id_tema":  id_tema
+        "id_tema":  id_tema,
+        "aluno": aluno
     }
     
     redacoes_collection = db.redacoes
@@ -141,6 +148,22 @@ def login():
             return jsonify({"error": "Email ou senha incorretos"}), 401
 
     return jsonify({"error": "Usuário não encontrado"}), 404
+
+@app.get("/users/alunos")
+def get_alunos():
+    users_collection = db.users
+    alunos = list(users_collection.find({"tipoUsuario": "aluno"}))
+    
+    for aluno in alunos:
+        aluno['_id'] = str(aluno['_id'])  # Convertendo ObjectId para string
+        aluno.pop('password', None)  # Remove o campo 'password' para evitar problemas com bytes
+    
+    response = jsonify(alunos)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    
+    return response
+
+
 
 @app.get("/temas")
 def get_temas():

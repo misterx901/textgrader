@@ -26,15 +26,18 @@ export interface Redacao {
     nota_professor: number;
     id_tema: string;
     id: string;
+    aluno: string;
 }
 
 const Home = () => {
     const [activeKey, setActiveKey] = useState<string>('1');
     const [temasData, setTemasData] = useState<Tema[]>([]); 
     const [redacoesData, setRedacoesData] = useState<Redacao[]>([]);
+    const [alunos, setAlunos] = useState<any[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedTema, setSelectedTema] = useState<Tema | null>(null);
     const [filter, setFilter] = useState<string>('todos');
+    const [filterAluno, setFilterAluno] = useState<string>('todos');
     const { isLoggedIn, tipoUsuario, nomeUsuario } = useAuth(); 
 
     const handleTabChange = (key: string) => {
@@ -74,6 +77,20 @@ const Home = () => {
         fetchRedacoes();
     }, []);
 
+    useEffect(() => {
+        const fetchAlunos = async () => {
+            try {
+                const response = await fetch('http://localhost:3006/users/alunos');
+                const data = await response.json();
+                setAlunos(data);
+            } catch (error) {
+                console.error('Erro ao buscar alunos:', error);
+            }
+        };
+
+        fetchAlunos();
+    }, []);
+
     const handleDeleteTema = async (id: string) => {
         try {
             const response = await fetch(`http://localhost:3006/temas/${id}`, {
@@ -103,6 +120,12 @@ const Home = () => {
             return redacoesData.filter(redacao => {
                 return temasData.find(tema => tema._id === redacao.id_tema && tema.nome_professor === nomeUsuario);
             });
+        }
+
+        if (filterAluno !== 'todos') {
+            return redacoesData.filter(redacao => {
+                redacao.aluno === filterAluno
+            })
         }
         return redacoesData;
     };
@@ -140,6 +163,7 @@ const Home = () => {
 
     const redacaoColumns = [
         { title: 'Título', dataIndex: 'titulo', key: 'titulo', ellipsis: true },
+        { title: 'Aluno', dataIndex: 'aluno', key: 'aluno', ellipsis: true },
         { title: 'Nota 1', dataIndex: 'nota1', key: 'nota1', align: 'center', ellipsis: true },
         { title: 'Nota 2', dataIndex: 'nota2', key: 'nota2', align: 'center', ellipsis: true },
         { title: 'Nota 3', dataIndex: 'nota3', key: 'nota3', align: 'center', ellipsis: true },
@@ -180,6 +204,16 @@ const Home = () => {
                                 <Select defaultValue="todos" style={{ width: 200 }} onChange={value => setFilter(value)}>
                                     <Option value="todos">Todas as Redações</Option>
                                     <Option value="meus">Redações dos meus temas</Option>
+                                </Select>
+                            )}
+                            {tipoUsuario === 'professor' && (
+                                <Select defaultValue="todos" style={{ width: 200 }} onChange={value => setFilterAluno(value)}>
+                                    <Option value="todos">Todos os Alunos</Option>
+                                    {alunos.map(aluno => (
+                                        <Option key={aluno._id} value={aluno.username}>
+                                            {aluno.username}
+                                        </Option>
+                                    ))}
                                 </Select>
                             )}
                         </Space>

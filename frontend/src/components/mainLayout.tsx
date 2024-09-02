@@ -81,7 +81,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 and Improved by
                 <a href="https://github.com/misterx901" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Felipe,</a>
                 <a href="https://github.com/LucassAbm" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucas,</a>
-                <a href="https://github.com/Gustavo-Pettine" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucca,</a> 
+                <a href="https://github.com/Lucca-1999" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Lucca,</a> 
                 <a href="https://github.com/VitorBelloni" style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}>Vitor</a>
             </Footer>
         </Layout>

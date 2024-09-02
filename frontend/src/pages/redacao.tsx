@@ -5,6 +5,7 @@ import { Modal, Skeleton } from 'antd'
 import { ClearOutlined, CheckOutlined, UploadOutlined } from '@ant-design/icons'
 import  TextArea from 'antd/lib/input/TextArea'
 import { S } from '@/styles/Redacao.styles'
+import { useAuth } from '../context';
 
 const Redacao = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -13,6 +14,7 @@ const Redacao = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const router = useRouter();
     const { id } = router.query;
+    const { nomeUsuario } = useAuth(); 
 
   const showModalText = async () => {
     await getEssayGrade()
@@ -37,9 +39,11 @@ const Redacao = () => {
   }
 
   const getEssayGrade = async () => {
+  console.log('nome', nomeUsuario);
     const response = await axios.post('http://localhost:3006/model', {
       essay: essay,
-      id:id
+      id: id,
+      aluno: nomeUsuario
     })
 
     const data = response.data
@@ -67,6 +71,7 @@ const Redacao = () => {
     const formData = new FormData()
     formData.append('image', selectedFile)
     formData.append('id', id ? id.toString() : '')
+    formData.append('aluno', nomeUsuario)
 
     try {
       const response = await axios.post('http://localhost:3006/model2', formData, {
